@@ -1,6 +1,7 @@
 import { ArrowRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import GlassDataCard from "./GlassDataCard";
 import heroFace from "@/assets/hero-face.jpg";
 import serumBottle from "@/assets/serum-bottle.jpg";
@@ -28,8 +29,9 @@ const HeroSection = () => {
         <Button
           variant="outline"
           className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
+          asChild
         >
-          Get Started
+          <Link to="/contact">Get Started</Link>
         </Button>
       </nav>
 
