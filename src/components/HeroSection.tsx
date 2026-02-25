@@ -109,25 +109,43 @@ const HeroSection = () => {
           transition={{ duration: 0.7, delay: 0.8 }}
           className="absolute -right-4 top-1/3 z-20 hidden md:block animate-float-delayed"
         >
-          <GlassDataCard className="w-44 p-4">
-            <p className="mb-2 text-xs font-medium text-primary-foreground/80">Hydration</p>
-            <div className="relative mx-auto h-20 w-20">
+        <GlassDataCard className="w-56 p-5">
+            <p className="mb-1 text-xs font-medium text-primary-foreground/80">Hydration Level</p>
+            <p className="mb-3 text-[10px] text-primary-foreground/50">Real-time moisture tracking</p>
+            <div className="relative mx-auto h-24 w-24">
               <svg viewBox="0 0 36 36" className="h-full w-full -rotate-90">
                 <path
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="hsla(0,0%,100%,0.15)"
-                  strokeWidth="3"
+                  strokeWidth="2.5"
                 />
                 <path
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="hsl(43,69%,47%)"
-                  strokeWidth="3"
+                  strokeWidth="2.5"
                   strokeDasharray="78, 100"
+                  strokeLinecap="round"
                 />
               </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-primary-foreground">78%</span>
+              <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">78%</span>
+            </div>
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="text-primary-foreground/60">Barrier Integrity</span>
+                <span className="font-medium text-primary-foreground">92%</span>
+              </div>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-primary-foreground/10">
+                <div className="h-full w-[92%] rounded-full bg-accent/80" />
+              </div>
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="text-primary-foreground/60">Elasticity</span>
+                <span className="font-medium text-primary-foreground">85%</span>
+              </div>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-primary-foreground/10">
+                <div className="h-full w-[85%] rounded-full bg-accent/60" />
+              </div>
             </div>
           </GlassDataCard>
         </motion.div>
