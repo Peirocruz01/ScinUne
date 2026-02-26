@@ -1,60 +1,112 @@
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import SectionWrapper from "./SectionWrapper";
 import face3d from "@/assets/face-3d.jpg";
+import skinAnalysis from "@/assets/skin-analysis.jpg";
+import skincareApp from "@/assets/skincare-application.jpg";
 
-const steps = ["Microbiome", "Barrier", "Hydration", "Elasticity", "Sensitivity"];
+const features = [
+  {
+    id: 1,
+    title: "Capture the hidden signals",
+    image: face3d,
+    description:
+      "Our proprietary 3D facial mapping technology analyzes over 200 skin parameters across five key dimensions. Every contour, pore, and zone is cataloged to build a complete biological portrait.",
+  },
+  {
+    id: 2,
+    title: "Decode your skin data",
+    image: skinAnalysis,
+    description:
+      "AI-analyzed results reveal the precise imbalances driving your skin concerns. The result? A treatment protocol uniquely calibrated to your biology — not a generic skin type.",
+  },
+  {
+    id: 3,
+    title: "Craft a responsive strategy",
+    image: skincareApp,
+    description:
+      "Your routine adapts in real-time as your skin evolves with the seasons, stress, and environment. Continuous feedback ensures your protocol stays perfectly tuned.",
+  },
+];
 
 const SkinStorySection = () => {
+  const [activeId, setActiveId] = useState(1);
+  const [activeImage, setActiveImage] = useState(features[0].image);
+
   return (
     <SectionWrapper id="about">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
-        {/* Left */}
+      <div className="mb-10">
+        <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium text-primary border-0">
+          Diagnostics
+        </Badge>
+        <h2 className="text-3xl font-semibold leading-tight text-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]">
+          Your Skin Story Revealed
+        </h2>
+      </div>
+
+      <div className="grid items-start gap-10 lg:grid-cols-2">
+        {/* Left — Accordion */}
         <div>
-          <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium text-primary border-0">
-            Diagnostics
-          </Badge>
-          <h2 className="mb-5 text-3xl font-semibold leading-tight text-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]">
-            Your Skin Story Revealed
-          </h2>
-          <p className="max-w-md text-base leading-relaxed text-muted-foreground">
-            Our proprietary 3D facial mapping technology analyzes over 200 skin parameters across five key dimensions.
-            Every contour, pore, and zone is cataloged to build a complete biological portrait.
-          </p>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
-            The result? A treatment protocol uniquely calibrated to your biology — not a generic skin type.
-          </p>
+          <Accordion
+            type="single"
+            value={`item-${activeId}`}
+            onValueChange={(value) => {
+              if (value) {
+                const id = parseInt(value.replace("item-", ""));
+                setActiveId(id);
+                const feature = features.find((f) => f.id === id);
+                if (feature) setActiveImage(feature.image);
+              }
+            }}
+            className="w-full"
+          >
+            {features.map((feature) => (
+              <AccordionItem
+                key={feature.id}
+                value={`item-${feature.id}`}
+                className="border-border"
+              >
+                <AccordionTrigger
+                  className="cursor-pointer py-5 !no-underline transition"
+                >
+                  <span className="text-lg font-semibold text-foreground">
+                    {feature.title}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-sm leading-relaxed text-muted-foreground mb-4">
+                    {feature.description}
+                  </p>
+                  {/* Mobile image */}
+                  <div className="lg:hidden overflow-hidden rounded-2xl">
+                    <img
+                      src={feature.image}
+                      alt={feature.title}
+                      className="w-full h-auto rounded-2xl object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
 
-        {/* Right — 3D Face Card */}
-        <div className="relative overflow-hidden rounded-3xl bg-primary p-6">
-          <img
-            src={face3d}
-            alt="3D skin analysis visualization"
-            className="mx-auto w-full max-w-sm rounded-2xl object-cover"
-            loading="lazy"
-          />
-          {/* Vertical Step Navigation */}
-          <div className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-3">
-            {steps.map((step, i) => (
-              <button
-                key={step}
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium transition-colors ${
-                  i === 0
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-primary-foreground/10 text-primary-foreground/50 hover:bg-primary-foreground/20"
-                }`}
-                title={step}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </button>
-            ))}
-          </div>
-          {/* Bottom Panel */}
-          <div className="mt-4 rounded-xl bg-secondary/40 p-3">
-            <div className="flex items-center justify-between text-xs text-primary-foreground/60">
-              <span>Zone A — Forehead</span>
-              <span className="font-medium text-accent">Analyzing...</span>
-            </div>
+        {/* Right — Image (desktop) */}
+        <div className="hidden lg:block sticky top-24">
+          <div className="overflow-hidden rounded-2xl">
+            <img
+              src={activeImage}
+              alt="Skin diagnostics visualization"
+              className="w-full aspect-[4/3] rounded-2xl object-cover transition-all duration-500"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
