@@ -1,146 +1,125 @@
-import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+  motion,
+} from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 import SectionWrapper from "./SectionWrapper";
 import serumBottle from "@/assets/serum-bottle.jpg";
 import productLineup from "@/assets/product-lineup.jpg";
 
 const products = [
   {
-    image: serumBottle,
     step: "Step 1",
     title: "Bioflora Cleanser",
     description:
       "Microbiome-safe cleansing that respects your skin's natural defense layer. Zero stripping, full clarity.",
     tags: ["Ceramides", "Probiotics"],
+    image: serumBottle,
   },
   {
-    image: productLineup,
     step: "Step 2",
     title: "Barrier Restore Serum",
     description:
       "Concentrated peptide complex that rebuilds and fortifies the skin barrier from within.",
     tags: ["Peptides", "Niacinamide"],
+    image: productLineup,
   },
   {
-    image: serumBottle,
     step: "Step 3",
     title: "Hydra-Lock Essence",
     description:
       "Multi-weight hyaluronic blend that locks moisture across epidermal layers for 72-hour hydration.",
     tags: ["Hyaluronic Acid", "Squalane"],
+    image: serumBottle,
   },
   {
-    image: productLineup,
     step: "Step 4",
     title: "Shield SPF 50+",
     description:
       "Invisible mineral shield with antioxidant fusion. Protects against UV, blue light, and pollution.",
     tags: ["Zinc Oxide", "Vitamin E"],
+    image: productLineup,
   },
 ];
 
 const EcosystemSection = () => {
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    if (!carouselApi) return;
-    const updateSelection = () => {
-      setCanScrollPrev(carouselApi.canScrollPrev());
-      setCanScrollNext(carouselApi.canScrollNext());
-      setCurrentSlide(carouselApi.selectedScrollSnap());
-    };
-    updateSelection();
-    carouselApi.on("select", updateSelection);
-    return () => {
-      carouselApi.off("select", updateSelection);
-    };
-  }, [carouselApi]);
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setHeight(rect.height);
+    }
+  }, [ref]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 10%", "end 50%"],
+  });
+
+  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
   return (
-    <SectionWrapper id="products">
-      {/* Header with nav arrows */}
-      <div className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-        <div>
+    <section id="products" ref={containerRef} className="px-6 md:px-8 lg:px-10 py-16 md:py-20 lg:py-24">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Header */}
+        <div className="mb-12 max-w-lg">
           <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium text-primary border-0">
             The System
           </Badge>
           <h2 className="text-3xl font-semibold leading-tight text-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]">
             Four Steps. One Ecosystem.
           </h2>
-          <p className="mt-3 max-w-md text-base text-muted-foreground">
+          <p className="mt-3 text-base text-muted-foreground">
             Each product is designed to work in concert — amplifying the effects
             of every other step.
           </p>
         </div>
-        <div className="hidden shrink-0 gap-2 md:flex">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full border border-border disabled:pointer-events-auto"
-            onClick={() => carouselApi?.scrollPrev()}
-            disabled={!canScrollPrev}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full border border-border disabled:pointer-events-auto"
-            onClick={() => carouselApi?.scrollNext()}
-            disabled={!canScrollNext}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
 
-      {/* Carousel */}
-      <div className="w-full">
-        <Carousel
-          setApi={setCarouselApi}
-          opts={{ breakpoints: { "(max-width: 768px)": { dragFree: true } } }}
-        >
-          <CarouselContent className="-ml-4 md:-ml-6">
-            {products.map((product) => (
-              <CarouselItem
-                key={product.title}
-                className="pl-4 md:pl-6 md:basis-1/2 lg:basis-1/3"
-              >
-                <a
-                  href="#"
-                  className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card"
-                >
+        {/* Timeline */}
+        <div ref={ref} className="relative pb-20">
+          {products.map((product, index) => (
+            <div key={product.title} className="flex justify-start pt-10 md:pt-20 md:gap-10">
+              {/* Left: sticky step label */}
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+                <div className="h-10 w-10 absolute left-3 md:left-3 rounded-full bg-card border border-border flex items-center justify-center">
+                  <div className="h-4 w-4 rounded-full bg-primary/30 border border-primary/50" />
+                </div>
+                <h3 className="hidden md:block text-xl md:pl-20 md:text-4xl font-bold text-foreground/30">
+                  {product.step}
+                </h3>
+              </div>
+
+              {/* Right: content */}
+              <div className="relative pl-20 pr-4 md:pl-4 w-full">
+                <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-foreground/30">
+                  {product.step}
+                </h3>
+                <div className="rounded-xl border border-border bg-card overflow-hidden">
                   <div className="aspect-[16/9] overflow-hidden">
                     <img
                       src={product.image}
                       alt={product.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="h-full w-full object-cover"
                       loading="lazy"
                     />
                   </div>
-                  <div className="flex flex-1 flex-col justify-between p-6">
-                    <div>
-                      <p className="mb-2 text-xs font-medium uppercase tracking-widest text-accent">
-                        {product.step}
-                      </p>
-                      <h3 className="mb-2 text-lg font-semibold text-foreground line-clamp-2">
-                        {product.title}
-                      </h3>
-                      <p className="mb-4 text-sm leading-relaxed text-muted-foreground line-clamp-3">
-                        {product.description}
-                      </p>
-                    </div>
+                  <div className="p-6">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-widest text-accent">
+                      {product.step}
+                    </p>
+                    <h4 className="mb-2 text-lg font-semibold text-foreground">
+                      {product.title}
+                    </h4>
+                    <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                      {product.description}
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {product.tags.map((tag) => (
                         <Badge
@@ -153,27 +132,24 @@ const EcosystemSection = () => {
                       ))}
                     </div>
                   </div>
-                </a>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-
-        {/* Dot indicators */}
-        <div className="mt-6 flex justify-center gap-2">
-          {products.map((_, i) => (
-            <button
-              key={i}
-              className={`h-2 rounded-full transition-all ${
-                i === currentSlide ? "w-6 bg-primary" : "w-2 bg-border"
-              }`}
-              onClick={() => carouselApi?.scrollTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-            />
+                </div>
+              </div>
+            </div>
           ))}
+
+          {/* Animated timeline line */}
+          <div
+            style={{ height: height + "px" }}
+            className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-gradient-to-b from-transparent via-border to-transparent"
+          >
+            <motion.div
+              style={{ height: heightTransform, opacity: opacityTransform }}
+              className="absolute inset-x-0 top-0 w-full bg-gradient-to-t from-primary via-accent to-transparent rounded-full"
+            />
+          </div>
         </div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 };
 
