@@ -61,6 +61,7 @@ const BiologySection = () => {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -68,6 +69,7 @@ const BiologySection = () => {
       setCanScrollPrev(carouselApi.canScrollPrev());
       setCanScrollNext(carouselApi.canScrollNext());
       setCurrentSlide(carouselApi.selectedScrollSnap());
+      setScrollSnaps(carouselApi.scrollSnapList());
     };
     updateSelection();
     carouselApi.on("select", updateSelection);
@@ -184,7 +186,7 @@ const BiologySection = () => {
 
         {/* Dot indicators */}
         <div className="mt-6 flex justify-center gap-2">
-          {cards.map((_, i) => (
+          {scrollSnaps.map((_, i) => (
             <button
               key={i}
               className={`h-2 rounded-full transition-all ${
