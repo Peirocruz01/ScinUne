@@ -107,6 +107,11 @@
   50% { transform: translateY(-12px); }
 }
 
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
