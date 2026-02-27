@@ -25,7 +25,7 @@ const cards = [
     title: "Decode your data",
     description:
       "AI-analyzed results reveal the precise imbalances driving your skin concerns.",
-    image: null, // data UI card
+    image: null,
     metrics: [
       { label: "Barrier Strength", value: 82, color: "bg-accent" },
       { label: "Hydration Index", value: 78, color: "bg-accent" },
@@ -38,6 +38,20 @@ const cards = [
     title: "Craft a responsive strategy",
     description:
       "Your routine adapts in real-time as your skin evolves with the seasons, stress, and environment.",
+    image: skincareApp,
+  },
+  {
+    id: "ingredients",
+    title: "Bioactive ingredient matching",
+    description:
+      "Every formula is built from clinically validated botanicals, matched to your specific skin profile for maximum efficacy.",
+    image: skinAnalysis,
+  },
+  {
+    id: "tracking",
+    title: "Track your skin's evolution",
+    description:
+      "Monitor real progress over weeks and months with visual skin mapping that reveals improvements invisible to the naked eye.",
     image: skincareApp,
   },
 ];
