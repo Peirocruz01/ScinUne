@@ -3,6 +3,14 @@
 import { cn } from "@/lib/utils";
 import { ReactNode, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import {
+  staggerContainer,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  scaleIn,
+} from "@/hooks/useScrollAnimation";
 
 interface VerticalMarqueeProps {
   children: ReactNode;
@@ -52,6 +60,8 @@ const marqueeItems = [
 
 const CTASection = () => {
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   useEffect(() => {
     const marqueeContainer = marqueeRef.current;
@@ -83,41 +93,83 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section className="bg-primary px-6 py-20 md:px-8 lg:px-10">
+    <section
+      ref={sectionRef}
+      className="bg-primary px-6 py-20 md:px-8 lg:px-10"
+    >
       <div className="mx-auto max-w-[1200px]">
-        <div className="rounded-3xl border border-primary-foreground/10 bg-secondary/40 p-8 md:p-12 lg:p-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.97 }}
+          animate={
+            isInView
+              ? { opacity: 1, y: 0, scale: 1 }
+              : { opacity: 0, y: 40, scale: 0.97 }
+          }
+          transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+          className="rounded-3xl border border-primary-foreground/10 bg-secondary/40 p-8 md:p-12 lg:p-16"
+        >
           <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
             {/* Left Content */}
-            <div className="flex-1 text-center lg:text-left">
-              <h2 className="mb-4 text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl lg:text-5xl">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate={isInView ? "show" : "hidden"}
+              className="flex-1 text-center lg:text-left"
+            >
+              <motion.h2
+                variants={fadeInUp}
+                className="mb-4 text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl lg:text-5xl"
+              >
                 Start Your Skin Journey Today
-              </h2>
-              <p className="mb-8 max-w-lg text-base leading-relaxed text-primary-foreground/60 md:text-lg">
+              </motion.h2>
+              <motion.p
+                variants={fadeInUp}
+                className="mb-8 max-w-lg text-base leading-relaxed text-primary-foreground/60 md:text-lg"
+              >
                 Discover biology-driven skincare designed to decode your unique
                 skin profile. Take our free skin test and get a personalized
                 routine in minutes.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 lg:justify-start justify-center">
-                <a
+              </motion.p>
+              <motion.div
+                variants={fadeInUp}
+                className="flex flex-col gap-3 sm:flex-row sm:gap-4 lg:justify-start justify-center"
+              >
+                <motion.a
                   href="#"
                   className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-accent-foreground transition-all hover:bg-accent/90"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   Take the Skin Test
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="#"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-primary-foreground/20 px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-primary-foreground/10"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   Explore Products
                   <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
+                </motion.a>
+              </motion.div>
+            </motion.div>
 
             {/* Right Marquee */}
-            <div className="hidden w-64 lg:block">
-              <div ref={marqueeRef} className="relative h-[340px] overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+              transition={{
+                duration: 0.7,
+                delay: 0.3,
+                ease: [0.25, 0.4, 0.25, 1],
+              }}
+              className="hidden w-64 lg:block"
+            >
+              <div
+                ref={marqueeRef}
+                className="relative h-[340px] overflow-hidden"
+              >
                 <VerticalMarquee speed={25}>
                   {marqueeItems.map((item, idx) => (
                     <div
@@ -134,9 +186,9 @@ const CTASection = () => {
                 {/* Bottom vignette */}
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24 bg-gradient-to-t from-secondary/40 to-transparent" />
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

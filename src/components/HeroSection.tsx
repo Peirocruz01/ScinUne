@@ -46,14 +46,23 @@ const HeroSection = () => {
   return (
     <section className="relative flex min-h-screen flex-col overflow-hidden bg-primary">
       {/* Header */}
-      <nav className="relative z-30 mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5 md:px-8">
+      <motion.nav
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+        className="relative z-30 mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5 md:px-8"
+      >
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <motion.div
+          className="flex items-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <Leaf className="h-6 w-6 text-accent" />
           <span className="text-xl font-semibold text-primary-foreground">
             ScinUne
           </span>
-        </div>
+        </motion.div>
 
         {/* Navigation */}
         <div className="hidden items-center gap-8 lg:flex">
@@ -62,29 +71,33 @@ const HeroSection = () => {
             { label: "Science" },
             { label: "About" },
             { label: "Journal" },
-          ].map((item) => (
-            <a
+          ].map((item, idx) => (
+            <motion.a
               key={item.label}
               href={`#${item.label.toLowerCase()}`}
               className="flex items-center gap-1 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 + idx * 0.07 }}
+              whileHover={{ y: -2 }}
             >
               {item.label}
-              {item.hasDropdown && (
-                <ChevronDown className="h-3.5 w-3.5" />
-              )}
-            </a>
+              {item.hasDropdown && <ChevronDown className="h-3.5 w-3.5" />}
+            </motion.a>
           ))}
         </div>
 
         {/* CTA Button */}
-        <Button
-          variant="outline"
-          className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
-          asChild
-        >
-          <Link to="/contact">Get Started</Link>
-        </Button>
-      </nav>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button
+            variant="outline"
+            className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
+            asChild
+          >
+            <Link to="/contact">Get Started</Link>
+          </Button>
+        </motion.div>
+      </motion.nav>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-8 md:px-8 md:pt-12">
@@ -117,16 +130,20 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
           >
-            <Button className="rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground hover:bg-accent/90">
-              Discover Bioflora
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              Take the Skin Test
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button className="rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground hover:bg-accent/90">
+                Discover Bioflora
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outline"
+                className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
+              >
+                Take the Skin Test
+              </Button>
+            </motion.div>
           </motion.div>
 
           {/* Disclaimer */}
@@ -169,7 +186,12 @@ const HeroSection = () => {
       </div>
 
       {/* Scrolling Program Cards */}
-      <div className="relative z-20 overflow-hidden pb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+        className="relative z-20 overflow-hidden pb-8"
+      >
         {/* Gradient Overlays */}
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-primary to-transparent md:w-40" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-primary to-transparent md:w-40" />
@@ -214,7 +236,7 @@ const HeroSection = () => {
             </div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };

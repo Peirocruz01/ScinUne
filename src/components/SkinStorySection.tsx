@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -6,10 +6,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import SectionWrapper from "./SectionWrapper";
 import face3d from "@/assets/face-3d.jpg";
 import skinAnalysis from "@/assets/skin-analysis.jpg";
 import skincareApp from "@/assets/skincare-application.jpg";
+import {
+  staggerContainer,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+} from "@/hooks/useScrollAnimation";
 
 const features = [
   {
@@ -39,20 +46,43 @@ const SkinStorySection = () => {
   const [activeId, setActiveId] = useState(1);
   const [activeImage, setActiveImage] = useState(features[0].image);
 
+  const headerRef = useRef(null);
+  const contentRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
+  const contentInView = useInView(contentRef, { once: true, amount: 0.2 });
+
   return (
     <SectionWrapper id="about">
-      <div className="mb-10">
-        <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium text-primary border-0">
-          Diagnostics
-        </Badge>
-        <h2 className="text-3xl font-semibold leading-tight text-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]">
+      {/* Header */}
+      <motion.div
+        ref={headerRef}
+        variants={staggerContainer}
+        initial="hidden"
+        animate={headerInView ? "show" : "hidden"}
+        className="mb-10"
+      >
+        <motion.div variants={fadeInUp}>
+          <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium text-primary border-0">
+            Diagnostics
+          </Badge>
+        </motion.div>
+        <motion.h2
+          variants={fadeInUp}
+          className="text-3xl font-semibold leading-tight text-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]"
+        >
           Your Skin Story Revealed
-        </h2>
-      </div>
+        </motion.h2>
+      </motion.div>
 
-      <div className="grid items-start gap-10 lg:grid-cols-2">
-        {/* Left — Accordion */}
-        <div>
+      <motion.div
+        ref={contentRef}
+        variants={staggerContainer}
+        initial="hidden"
+        animate={contentInView ? "show" : "hidden"}
+        className="grid items-start gap-10 lg:grid-cols-2"
+      >
+        {/* Left — Accordion with fade-in-left */}
+        <motion.div variants={fadeInLeft}>
           <Accordion
             type="single"
             value={`item-${activeId}`}
@@ -72,9 +102,7 @@ const SkinStorySection = () => {
                 value={`item-${feature.id}`}
                 className="border-border"
               >
-                <AccordionTrigger
-                  className="cursor-pointer py-5 !no-underline transition"
-                >
+                <AccordionTrigger className="cursor-pointer py-5 !no-underline transition">
                   <span className="text-lg font-semibold text-foreground">
                     {feature.title}
                   </span>
@@ -96,20 +124,30 @@ const SkinStorySection = () => {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
+        </motion.div>
 
-        {/* Right — Image (desktop) */}
-        <div className="hidden lg:block sticky top-24">
+        {/* Right — Image (desktop) with dissolve/morph transition */}
+        <motion.div
+          variants={fadeInRight}
+          className="hidden lg:block sticky top-24"
+        >
           <div className="overflow-hidden rounded-2xl">
-            <img
-              src={activeImage}
-              alt="Skin diagnostics visualization"
-              className="w-full aspect-[4/3] rounded-2xl object-cover transition-all duration-500"
-              loading="lazy"
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeImage}
+                src={activeImage}
+                alt="Skin diagnostics visualization"
+                className="w-full aspect-[4/3] rounded-2xl object-cover"
+                loading="lazy"
+                initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                transition={{ duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
+              />
+            </AnimatePresence>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </SectionWrapper>
   );
 };

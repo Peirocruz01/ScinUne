@@ -8,9 +8,18 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import SectionWrapper from "./SectionWrapper";
 import skinAnalysis from "@/assets/skin-analysis.jpg";
 import skincareApp from "@/assets/skincare-application.jpg";
+import {
+  staggerContainer,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  dissolve,
+} from "@/hooks/useScrollAnimation";
 
 const cards = [
   {
@@ -63,6 +72,11 @@ const BiologySection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
+  const headerRef = useRef(null);
+  const carouselRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
+  const carouselInView = useInView(carouselRef, { once: true, amount: 0.15 });
+
   useEffect(() => {
     if (!carouselApi) return;
     const updateSelection = () => {
@@ -81,16 +95,25 @@ const BiologySection = () => {
   return (
     <SectionWrapper dark id="science">
       {/* Header with nav arrows */}
-      <div className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-        <div>
+      <motion.div
+        ref={headerRef}
+        variants={staggerContainer}
+        initial="hidden"
+        animate={headerInView ? "show" : "hidden"}
+        className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end"
+      >
+        <motion.div variants={fadeInLeft}>
           <Badge className="mb-4 rounded-full bg-secondary px-4 py-1 text-xs font-medium text-primary-foreground border-0">
             Our Approach
           </Badge>
           <h2 className="text-3xl font-semibold leading-tight text-primary-foreground md:text-4xl lg:text-[40px] lg:leading-[48px]">
             From Biology to a Better Routine
           </h2>
-        </div>
-        <div className="hidden shrink-0 gap-2 md:flex">
+        </motion.div>
+        <motion.div
+          variants={fadeInRight}
+          className="hidden shrink-0 gap-2 md:flex"
+        >
           <Button
             variant="ghost"
             size="icon"
@@ -109,28 +132,47 @@ const BiologySection = () => {
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Carousel */}
-      <div className="w-full">
+      <motion.div
+        ref={carouselRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={carouselInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+        className="w-full"
+      >
         <Carousel
           setApi={setCarouselApi}
           opts={{ breakpoints: { "(max-width: 768px)": { dragFree: true } } }}
         >
           <CarouselContent className="-ml-4 md:-ml-6">
-            {cards.map((card) => (
+            {cards.map((card, index) => (
               <CarouselItem
                 key={card.id}
                 className="pl-4 md:pl-6 md:basis-1/2 lg:basis-1/3"
               >
-                <div className="group flex flex-col overflow-hidden rounded-2xl bg-secondary/50 h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <motion.div
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  animate={
+                    carouselInView
+                      ? { opacity: 1, y: 0, scale: 1 }
+                      : { opacity: 0, y: 30, scale: 0.95 }
+                  }
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    ease: [0.25, 0.4, 0.25, 1],
+                  }}
+                  className="group flex flex-col overflow-hidden rounded-2xl bg-secondary/50 h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                >
                   {card.image ? (
                     <div className="aspect-[4/3] overflow-hidden">
                       <img
                         src={card.image}
                         alt={card.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
                     </div>
@@ -140,7 +182,7 @@ const BiologySection = () => {
                         <p className="mb-3 text-xs font-medium uppercase tracking-wider text-primary-foreground/50">
                           Skin Profile
                         </p>
-                        {card.metrics.map((metric) => (
+                        {card.metrics.map((metric, mIdx) => (
                           <div key={metric.label} className="mb-3">
                             <div className="mb-1 flex items-center justify-between">
                               <span className="text-xs text-primary-foreground/70">
@@ -151,9 +193,19 @@ const BiologySection = () => {
                               </span>
                             </div>
                             <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary-foreground/10">
-                              <div
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={
+                                  carouselInView
+                                    ? { width: `${metric.value}%` }
+                                    : { width: 0 }
+                                }
+                                transition={{
+                                  duration: 1.2,
+                                  delay: 0.3 + mIdx * 0.15,
+                                  ease: [0.25, 0.4, 0.25, 1],
+                                }}
                                 className={`h-full rounded-full ${metric.color}`}
-                                style={{ width: `${metric.value}%` }}
                               />
                             </div>
                           </div>
@@ -178,7 +230,7 @@ const BiologySection = () => {
                       </span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -199,7 +251,7 @@ const BiologySection = () => {
             />
           ))}
         </div>
-      </div>
+      </motion.div>
     </SectionWrapper>
   );
 };
