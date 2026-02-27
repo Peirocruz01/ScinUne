@@ -1,31 +1,82 @@
-import { ArrowRight, Leaf } from "lucide-react";
+import { ArrowRight, Leaf, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import GlassDataCard from "./GlassDataCard";
 import heroFace from "@/assets/hero-face.jpg";
 import serumBottle from "@/assets/serum-bottle.jpg";
+import skinAnalysis from "@/assets/skin-analysis.jpg";
+import skincareApp from "@/assets/skincare-application.jpg";
+import productLineup from "@/assets/product-lineup.jpg";
+import face3d from "@/assets/face-3d.jpg";
+
+const programs = [
+  {
+    image: heroFace,
+    category: "DIAGNOSTICS",
+    title: "Skin Analysis",
+  },
+  {
+    image: serumBottle,
+    category: "TREATMENT",
+    title: "Custom Serums",
+  },
+  {
+    image: skinAnalysis,
+    category: "SCIENCE",
+    title: "Bioflora Mapping",
+  },
+  {
+    image: skincareApp,
+    category: "ROUTINE",
+    title: "Daily Protocol",
+  },
+  {
+    image: productLineup,
+    category: "COLLECTION",
+    title: "Full Ecosystem",
+  },
+  {
+    image: face3d,
+    category: "TECHNOLOGY",
+    title: "3D Skin Scan",
+  },
+];
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden rounded-b-3xl bg-primary px-6 pb-8 pt-6 md:px-8 lg:px-10">
-      {/* Nav */}
-      <nav className="mx-auto flex max-w-[1200px] items-center justify-between pb-12">
+    <section className="relative flex min-h-screen flex-col overflow-hidden bg-primary">
+      {/* Header */}
+      <nav className="relative z-30 mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5 md:px-8">
+        {/* Logo */}
         <div className="flex items-center gap-2">
           <Leaf className="h-6 w-6 text-accent" />
-          <span className="text-xl font-semibold text-primary-foreground">ScinUne</span>
+          <span className="text-xl font-semibold text-primary-foreground">
+            ScinUne
+          </span>
         </div>
-        <div className="hidden items-center gap-8 md:flex">
-          {["Products", "Science", "About", "Journal"].map((link) => (
+
+        {/* Navigation */}
+        <div className="hidden items-center gap-8 lg:flex">
+          {[
+            { label: "Products", hasDropdown: true },
+            { label: "Science" },
+            { label: "About" },
+            { label: "Journal" },
+          ].map((item) => (
             <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-              className="text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+              key={item.label}
+              href={`#${item.label.toLowerCase()}`}
+              className="flex items-center gap-1 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
             >
-              {link}
+              {item.label}
+              {item.hasDropdown && (
+                <ChevronDown className="h-3.5 w-3.5" />
+              )}
             </a>
           ))}
         </div>
+
+        {/* CTA Button */}
         <Button
           variant="outline"
           className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
@@ -35,135 +86,133 @@ const HeroSection = () => {
         </Button>
       </nav>
 
-      {/* Hero Content */}
-      <div className="mx-auto max-w-[1200px] pb-16 pt-8 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-primary-foreground md:text-5xl lg:text-[56px] lg:leading-[64px]"
-        >
-          Test better. Treat better.
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-primary-foreground/70 md:text-lg"
-        >
-          A personalized skincare ecosystem built from your unique biology. Science meets nature in every drop.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-8 flex items-center justify-center gap-4"
-        >
-          <Button className="rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground hover:bg-accent/90">
-            Discover Bioflora <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-8 md:px-8 md:pt-12">
+        <div className="mx-auto max-w-3xl text-center">
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-4xl font-semibold leading-tight tracking-tight text-primary-foreground md:text-5xl lg:text-[56px] lg:leading-[64px]"
           >
-            Take the Skin Test
-          </Button>
-        </motion.div>
+            Test better. Treat better.
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-primary-foreground/70 md:text-lg"
+          >
+            A personalized skincare ecosystem built from your unique biology.
+            Science meets nature in every drop.
+          </motion.p>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+          >
+            <Button className="rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground hover:bg-accent/90">
+              Discover Bioflora
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full border-primary-foreground/20 bg-transparent text-sm text-primary-foreground hover:bg-primary-foreground/10"
+            >
+              Take the Skin Test
+            </Button>
+          </motion.div>
+
+          {/* Disclaimer */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="mt-4 text-xs text-primary-foreground/40"
+          >
+            *No subscription required
+          </motion.p>
+
+          {/* Social Proof */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="mt-8 flex items-center justify-center gap-3"
+          >
+            <div className="flex -space-x-2">
+              {[
+                "https://i.pravatar.cc/150?img=1",
+                "https://i.pravatar.cc/150?img=2",
+                "https://i.pravatar.cc/150?img=3",
+                "https://i.pravatar.cc/150?img=4",
+              ].map((avatar, index) => (
+                <img
+                  key={index}
+                  src={avatar}
+                  alt=""
+                  className="h-8 w-8 rounded-full border-2 border-primary object-cover"
+                />
+              ))}
+            </div>
+            <span className="text-sm text-primary-foreground/60">
+              Join over 10,000+ people
+            </span>
+          </motion.div>
+        </div>
       </div>
 
-      {/* Hero Visual Composition */}
-      <div className="relative mx-auto max-w-[1000px]">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative z-10 overflow-hidden rounded-3xl"
-        >
-          <img
-            src={heroFace}
-            alt="Radiant skin with botanical skincare"
-            className="w-full object-cover"
-          />
-        </motion.div>
+      {/* Scrolling Program Cards */}
+      <div className="relative z-20 overflow-hidden pb-8">
+        {/* Gradient Overlays */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-primary to-transparent md:w-40" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-primary to-transparent md:w-40" />
 
-        {/* Floating Glass Cards */}
+        {/* Scrolling Container */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="absolute -left-4 top-1/4 z-20 hidden md:block animate-float"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 30,
+              ease: "linear",
+            },
+          }}
+          className="flex gap-4 md:gap-6"
         >
-          <GlassDataCard className="w-48 p-4">
-            <p className="mb-2 text-xs font-medium text-primary-foreground/80">Skin Health Score</p>
-            <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-primary-foreground">87</span>
-              <span className="mb-1 text-xs text-accent">+12%</span>
-            </div>
-            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-primary-foreground/10">
-              <div className="h-full w-[87%] rounded-full bg-accent" />
-            </div>
-          </GlassDataCard>
-        </motion.div>
+          {[...programs, ...programs].map((program, index) => (
+            <div
+              key={index}
+              className="group relative h-48 w-36 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl md:h-64 md:w-48"
+            >
+              {/* Image */}
+              <img
+                src={program.image}
+                alt={program.title}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
 
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.8 }}
-          className="absolute -right-4 top-1/3 z-20 hidden md:block animate-float-delayed"
-        >
-        <GlassDataCard className="w-56 p-5">
-            <p className="mb-1 text-xs font-medium text-primary-foreground/80">Hydration Level</p>
-            <p className="mb-3 text-[10px] text-primary-foreground/50">Real-time moisture tracking</p>
-            <div className="relative mx-auto h-24 w-24">
-              <svg viewBox="0 0 36 36" className="h-full w-full -rotate-90">
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="hsla(0,0%,100%,0.15)"
-                  strokeWidth="2.5"
-                />
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="hsl(43,69%,47%)"
-                  strokeWidth="2.5"
-                  strokeDasharray="78, 100"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">78%</span>
-            </div>
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center justify-between text-[10px]">
-                <span className="text-primary-foreground/60">Barrier Integrity</span>
-                <span className="font-medium text-primary-foreground">92%</span>
-              </div>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-primary-foreground/10">
-                <div className="h-full w-[92%] rounded-full bg-accent/80" />
-              </div>
-              <div className="flex items-center justify-between text-[10px]">
-                <span className="text-primary-foreground/60">Elasticity</span>
-                <span className="font-medium text-primary-foreground">85%</span>
-              </div>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-primary-foreground/10">
-                <div className="h-full w-[85%] rounded-full bg-accent/60" />
-              </div>
-            </div>
-          </GlassDataCard>
-        </motion.div>
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
 
-        {/* Floating Serum Bottle */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1 }}
-          className="absolute -bottom-6 right-12 z-20 hidden md:block animate-float"
-        >
-          <img
-            src={serumBottle}
-            alt="ScinUne serum bottle"
-            className="h-40 w-auto drop-shadow-2xl"
-          />
+              {/* Text Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+                <span className="text-[10px] font-semibold tracking-wider text-accent">
+                  {program.category}
+                </span>
+                <p className="mt-0.5 text-sm font-medium text-primary-foreground">
+                  {program.title}
+                </p>
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>
